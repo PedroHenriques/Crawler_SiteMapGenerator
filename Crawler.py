@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # 															 #
-# Python Crawler and Site Map Generator v1.0.0				 #
+# Python Crawler and Site Map Generator v1.1.0				 #
 #															 #
 # Copyright 2016, PedroHenriques 							 #
 # http://www.pedrojhenriques.com 							 #
@@ -59,12 +59,12 @@ class Crawler(threading.Thread) :
 		# remove the port information, if it's present
 		port_index = self.parsed_root_url.netloc.find(":")
 		if (port_index != -1) :
-			self.parsed_root_url_noport = self.parsed_root_url.netloc[:port_index]
+			self.parsed_root_url_netloc_noport = self.parsed_root_url.netloc[:port_index]
 		else :
-			self.parsed_root_url_noport = self.parsed_root_url.netloc
+			self.parsed_root_url_netloc_noport = self.parsed_root_url.netloc
 
 		# build the full URL with no port
-		self.parsed_root_url_full = self.parsed_root_url_noport + self.parsed_root_url.path
+		self.parsed_root_url_full = self.parsed_root_url_netloc_noport + self.parsed_root_url.path
 
 		# loop until the terminate flag is set to True
 		while not self.terminate_thread_ :
@@ -122,7 +122,6 @@ class Crawler(threading.Thread) :
 		html_parser = ParserHTML.ParserHTML(self.root_url_, {"a" : {"href" : True}})
 
 		# grab the URL's HTML text and feed it to the html parser
-		# FIXME: get the encoding being used on the url and use it to decode, instead of the hardcoded utf-8
 		html_parser.feed(urllib.request.urlopen(cur_url).read().decode("utf-8"))
 
 		# loop through the gathered links, prepare them and add them to the queue
@@ -151,16 +150,12 @@ class Crawler(threading.Thread) :
 		# remove the port information, if it's present
 		port_index = parsed_url.netloc.find(":")
 		if (port_index != -1) :
-			parsed_url_noport = parsed_url.netloc[0:port_index]
+			parsed_url_netloc_noport = parsed_url.netloc[0:port_index]
 		else :
-			parsed_url_noport = parsed_url.netloc
-
-		# build the full URL with no port
-		parsed_url_full = parsed_url_noport + parsed_url.path
+			parsed_url_netloc_noport = parsed_url.netloc
 
 		# if the root url for the current project is in url, then it's an internal link
-		# doesn't necessarily work for subdomains
-		if (self.parsed_root_url_full in parsed_url_full) :
+		if (self.parsed_root_url_full in parsed_url_netloc_noport) :
 			return(False)
 
 		# check if the reason root url isn't in url is because 1 of them having the www. omitted
@@ -170,13 +165,16 @@ class Crawler(threading.Thread) :
 		else :
 			aux_root_url_full = self.parsed_root_url_full
 
-		if (parsed_url_full.startswith("www.")) :
-			aux_url_full = parsed_url_full[4:]
+		if (parsed_url_netloc_noport.startswith("www.")) :
+			aux_url_netloc = parsed_url_netloc_noport[4:]
 		else :
-			aux_url_full = parsed_url_full
+			aux_url_netloc = parsed_url_netloc_noport
 
-		if (aux_root_url_full in aux_url_full) :
+		if (aux_root_url_full in aux_url_netloc) :
 			return(False)
+
+		# build the full URL with no port
+		parsed_url_full = aux_url_netloc + parsed_url.path
 
 		# check if we're dealing with a case of a subdomain written in 2 different forms
 		# at this point we only haven't checked the case where both forms are being used,
@@ -186,21 +184,21 @@ class Crawler(threading.Thread) :
 		# the passed url to check if they're part of the same subdomain
 		# NOTE: this code assumes all levels of a subdomain are represented either as subdomains or folders, no mixed structures (ex: subdomain1.domain.ending/subdomain2)
 		# check if the root url could be of the form "subdomain.domain.ending"
-		if (self.parsed_root_url.path == "" and not self.parsed_root_url_noport.startswith("www.") and self.parsed_root_url_noport.count(".") > 1) :
-			# the root url might be of the form "subdomain.domain.ending" --> it can also be something like "domain.co.uk" which isn't a subdomain
+		if (self.parsed_root_url.path == "" and not self.parsed_root_url_netloc_noport.startswith("www.") and self.parsed_root_url_netloc_noport.count(".") > 1) :
+			# the root url might be of the form "subdomain.domain.ending" --> it can also be something like "domain.co.uk" which isn't a "subdomain"
 			# convert to the form "domain.ending/subdomain"
-			converted_root_url_parts = self.parsed_root_url_noport.split(".")
+			converted_root_url_parts = self.parsed_root_url_netloc_noport.split(".")
 
 			# start by testing assuming the ending is 1 part (so not "co.uk")
 			converted_root_url = ".".join(converted_root_url_parts[-2:]) + "/" + "/".join(converted_root_url_parts[:-2])
 			# match converted_root_url against passed url with no "www."
-			if (converted_root_url in aux_url_full) :
+			if (converted_root_url in parsed_url_full) :
 				return(False)
 
 			# test assuming the ending is 2 part (so for example "co.uk")
 			converted_root_url = ".".join(converted_root_url_parts[-3:]) + "/" + "/".join(converted_root_url_parts[:-3])
 			# match converted_root_url against passed url with no "www."
-			if (converted_root_url in aux_url_full) :
+			if (converted_root_url in parsed_url_full) :
 				return(False)
 		# check if the root url could be of the form "(www.)?domain.ending/subdomain"
 		# only possible if path isn't empty
@@ -210,7 +208,7 @@ class Crawler(threading.Thread) :
 			converted_root_url = general.convertFoldersToSubdomain(self.parsed_root_url)
 
 			# match converted_root_url against passed url with no "www."
-			if (converted_root_url in aux_url_full) :
+			if (converted_root_url in parsed_url_full) :
 				return(False)
 
 		# at this point it must be an external link, or a multi-level deep subdomain with a mixed structure

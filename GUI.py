@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # 															 #
-# Python Crawler and Site Map Generator v1.0.0				 #
+# Python Crawler and Site Map Generator v1.1.0				 #
 #															 #
 # Copyright 2016, PedroHenriques 							 #
 # http://www.pedrojhenriques.com 							 #
@@ -465,7 +465,7 @@ class GUI :
 		ttk.Label(self.frame_inputs, text="Please select the project to delete: ").grid(row=0, column=0, sticky="W", pady=self.pad_half_rem, padx=self.pad_half_rem)
 		self.combobox_elems["delete_proj"] = ttk.Combobox(self.frame_inputs, state="readonly", values=projects, height="10")
 		self.combobox_elems["delete_proj"].grid(row=0, column=1, pady=self.pad_half_rem, padx=self.pad_half_rem)
-		self.input_button_elems["delete_proj"] = ttk.Button(self.frame_inputs, text="Open", command=lambda: self.caller_object.deleteProject(self.combobox_elems["delete_proj"].get()))
+		self.input_button_elems["delete_proj"] = ttk.Button(self.frame_inputs, text="Delete", command=lambda: self.caller_object.deleteProject(self.combobox_elems["delete_proj"].get()))
 		self.input_button_elems["delete_proj"].grid(row=0, column=2, sticky="W,E", pady=self.pad_half_rem, padx=self.pad_half_rem)
 
 	# update the project list for the active task
@@ -866,12 +866,12 @@ class GUI :
 		ttk.Label(self.frame_task_data, text=" found.").grid(row=0, column=4, sticky="W", pady=self.pad_half_rem, padx=self.pad_half_rem)
 
 		# show how many failed links we've come across
-		ttk.Label(self.frame_task_data, text="Number of failed links: ").grid(row=2, column=0, columnspan="4", sticky="W", pady=self.pad_half_rem, padx=self.pad_half_rem)
+		ttk.Label(self.frame_task_data, text="Number of failed links: ").grid(row=1, column=0, columnspan="4", sticky="W", pady=self.pad_half_rem, padx=self.pad_half_rem)
 		self.label_elems["failed"] = ttk.Label(self.frame_task_data, text="0")
 		self.label_elems["failed"].grid(row=1, column=4, sticky="W", pady=self.pad_half_rem, padx=self.pad_half_rem)
 
 		# show how many external links we've found
-		ttk.Label(self.frame_task_data, text="Number of external links found: ").grid(row=1, column=0, columnspan="4", sticky="W", pady=self.pad_half_rem, padx=self.pad_half_rem)
+		ttk.Label(self.frame_task_data, text="Number of external links found: ").grid(row=2, column=0, columnspan="4", sticky="W", pady=self.pad_half_rem, padx=self.pad_half_rem)
 		self.label_elems["external"] = ttk.Label(self.frame_task_data, text="0")
 		self.label_elems["external"].grid(row=2, column=4, sticky="W", pady=self.pad_half_rem, padx=self.pad_half_rem)
 
