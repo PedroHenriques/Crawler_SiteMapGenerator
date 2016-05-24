@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # 															 #
-# Python Crawler and Site Map Generator v1.1.0				 #
+# Python Crawler and Site Map Generator v1.2.0				 #
 #															 #
 # Copyright 2016, PedroHenriques 							 #
 # http://www.pedrojhenriques.com 							 #
@@ -122,7 +122,9 @@ class Crawler(threading.Thread) :
 		html_parser = ParserHTML.ParserHTML(self.root_url_, {"a" : {"href" : True}})
 
 		# grab the URL's HTML text and feed it to the html parser
-		html_parser.feed(urllib.request.urlopen(cur_url).read().decode("utf-8"))
+		# NOTE: this program will present itself under the name "SiteMapCrawler"
+		url_request = urllib.request.Request(cur_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36 SiteMapCrawler'})
+		html_parser.feed(urllib.request.urlopen(url_request).read().decode("utf-8"))
 
 		# loop through the gathered links, prepare them and add them to the queue
 		for url_candidate in html_parser.collected_attrs :

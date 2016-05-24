@@ -15,3 +15,7 @@ Each project represents a website.
 6. Create the Site Map XML file and place it on your website's root directory.
 
 The program has tooltips with further information when needed.
+
+## Extra Information
+
+This program will present itself under the name **SiteMapCrawler** to the servers it visits.
