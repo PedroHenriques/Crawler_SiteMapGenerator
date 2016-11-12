@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # 															 #
-# Python Crawler and Site Map Generator v1.2.0				 #
+# Python Crawler and Site Map Generator v1.2.1				 #
 #															 #
 # Copyright 2016, PedroHenriques 							 #
 # http://www.pedrojhenriques.com 							 #
@@ -12,7 +12,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import tkinter as tk, tkinter.ttk as ttk, tkinter.messagebox as msgbox, tkinter.font as tkFont, re, math
-import ToolTips
+from classes import ToolTips
 
 class GUI :
 	"""This class is responsible for creating, editing and updating all the GUI elements."""

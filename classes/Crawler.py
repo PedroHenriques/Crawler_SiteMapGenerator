@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # 															 #
-# Python Crawler and Site Map Generator v1.2.0				 #
+# Python Crawler and Site Map Generator v1.2.1				 #
 #															 #
 # Copyright 2016, PedroHenriques 							 #
 # http://www.pedrojhenriques.com 							 #
@@ -12,7 +12,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import threading, time, urllib.robotparser, urllib.request, urllib.parse
-import ParserHTML, general
+from classes import ParserHTML, general
 
 class Crawler(threading.Thread) :
 	"""This class defined a website crawler.

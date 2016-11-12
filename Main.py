@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # 															 #
-# Python Crawler and Site Map Generator v1.2.0				 #
+# Python Crawler and Site Map Generator v1.2.1				 #
 #															 #
 # Copyright 2016, PedroHenriques 							 #
 # http://www.pedrojhenriques.com 							 #
@@ -12,7 +12,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import traceback, threading, queue, os, time, tkinter as tk, subprocess, platform, urllib.parse
-import general, GUI, MapGenerator, Crawler
+from classes import general, GUI, MapGenerator, Crawler
 
 class Application :
 	"""This is the application's main class.
